@@ -1,0 +1,51 @@
+@color: var(--number-step-color, #1890ff);
+
+.root {
+  display: inline-block;
+  user-select: none;
+}
+
+.content {
+  min-width: 32px;
+  padding: 0 6px;
+  display: inline-block;
+  text-align: center;
+  position: relative;
+
+  span {
+    opacity: 0;
+    user-select: none;
+  }
+
+  input {
+    position: absolute;
+    inset: 0;
+    padding: 0 6px;
+    background-color: transparent;
+    text-align: center;
+  }
+}
+
+.steps {
+  display: inline-block;
+}
+
+.item {
+  margin-right: 0;
+
+  &:not(:last-child) {
+    margin-right: 6px;
+  }
+}
+
+.tag {
+  background-color: @color;
+  border-color: @color;
+  color: #ffffff;
+}
+
+.icon {
+  color: @color;
+  font-size: 16px;
+  vertical-align: -3px;
+}

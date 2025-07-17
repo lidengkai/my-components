@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "esnext",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "strict": true,
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": [],
+    "paths": {
+      "@components/common/*": ["../react-common/src/*"],
+      "@components/hooks/*": ["../react-hooks/src/*"],
+      "@components/components/*": ["./src/*"]
+    }
+  },
+  "include": ["../react-common/src", "../react-hooks/src", "src"],
+  "exclude": ["node_modules"]
+}
