@@ -2,10 +2,15 @@ import React, { useMemo, useState } from 'react';
 import { Picker } from 'antd-mobile';
 import { useMemoizedFn } from 'ahooks';
 
+export interface ColumnType<T> {
+  label: React.ReactNode;
+  value: T;
+}
+
 export interface SelectPickerProps<T extends string | number = any> {
   className?: string;
   style?: React.CSSProperties;
-  columns?: { label: React.ReactNode; value: T }[][];
+  columns?: ColumnType<T>[][] | ((value: T[]) => ColumnType<T>[][]);
   value?: T[];
   onChange?(value: T[]): void;
   children?(options: {
@@ -38,12 +43,27 @@ const SelectPicker = <T extends string | number>(
     setVisible(false);
   });
 
+  const columnsIn = useMemo(() => {
+    if (typeof columns === 'function') {
+      return columns(valueIn);
+    }
+    return columns;
+  }, [columns, valueIn]);
+
+  const columnsOut = useMemo(() => {
+    if (typeof columns === 'function') {
+      return columns(value);
+    }
+    return columns;
+  }, [columns, value]);
+
   const labels = useMemo(() => {
-    return columns.map((list, index) => {
-      const item = list.find((item) => value.includes(item.value));
+    return columnsOut.map((list, index) => {
+      const val = value[index];
+      const item = list.find((item) => val === item.value);
       return item?.label;
     });
-  }, [value, columns]);
+  }, [value, columnsOut]);
 
   return (
     <>
@@ -51,11 +71,12 @@ const SelectPicker = <T extends string | number>(
       <Picker
         className={className}
         style={style}
-        columns={columns}
+        columns={columnsIn}
         value={valueIn}
         visible={visible}
         onClose={handleClose}
         onConfirm={onChange as any}
+        onSelect={setValueIn as any}
       />
     </>
   );
