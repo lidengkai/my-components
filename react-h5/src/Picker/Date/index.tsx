@@ -3,24 +3,30 @@ import classnames from 'classnames';
 import styles from './style.less';
 import { DatePicker as D } from 'antd-mobile';
 import { useMemoizedFn } from 'ahooks';
+import moment from 'moment';
 
 export interface DatePickerProps {
   className?: string;
   style?: React.CSSProperties;
-  value?: Date | null;
-  onChange?(value: Date): void;
+  value?: string;
+  onChange?(value: string): void;
   types?: Array<'year' | 'month' | 'day' | 'hour' | 'minute'>;
-  children?(options: { onClick(): void; value: Date | null }): React.ReactNode;
+  children?(options: {
+    onClick(): void;
+    value: string | undefined;
+  }): React.ReactNode;
+  format?: string;
 }
 
 const DatePicker = (props: DatePickerProps) => {
   const {
     className = '',
     style,
-    value = null,
+    value,
     onChange,
     types,
     children,
+    format = 'YYYY-MM-DD HH:mm:ss',
   } = props;
 
   const [valueIn, setValueIn] = useState<Date | null>(null);
@@ -28,11 +34,15 @@ const DatePicker = (props: DatePickerProps) => {
 
   const handleOpen = useMemoizedFn(() => {
     setVisible(true);
-    setValueIn(value);
+    setValueIn(value ? new Date(value) : null);
   });
 
   const handleClose = useMemoizedFn(() => {
     setVisible(false);
+  });
+
+  const handleChange = useMemoizedFn((value: Date) => {
+    onChange?.(moment(value).format(format));
   });
 
   const typeClass = useMemo(() => {
@@ -51,7 +61,7 @@ const DatePicker = (props: DatePickerProps) => {
         value={valueIn}
         visible={visible}
         onClose={handleClose}
-        onConfirm={onChange}
+        onConfirm={handleChange}
         precision="minute"
         renderLabel={(type, data) => {
           switch (type) {
