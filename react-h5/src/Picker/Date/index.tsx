@@ -34,7 +34,7 @@ const DatePicker = (props: DatePickerProps) => {
 
   const handleOpen = useMemoizedFn(() => {
     setVisible(true);
-    setValueIn(value ? new Date(value) : null);
+    setValueIn(value ? moment(value, format).toDate() : null);
   });
 
   const handleClose = useMemoizedFn(() => {
